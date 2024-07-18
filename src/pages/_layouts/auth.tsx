@@ -1,5 +1,5 @@
-import { Car } from "lucide-react";
-import { Outlet } from "react-router-dom";
+import { CarFront } from 'lucide-react'
+import { Outlet } from 'react-router-dom'
 
 // import background from "@/assets/background.svg";
 
@@ -8,8 +8,8 @@ export function AuthLayout() {
     <div className="grid min-h-screen grid-cols-1 md:grid-cols-2">
       <div className="hidden flex-col justify-between bg-muted p-10 text-muted-foreground md:flex">
         <div className="flex items-center gap-3 text-lg text-foreground">
-          <Car className="h-6 w-6 text-muted-foreground" />
-          <span className="font-leckerli-one flex flex-row text-3xl tracking-wider text-primary">
+          <CarFront className="h-6 w-6 text-muted-foreground" />
+          <span className="flex flex-row font-leckerli-one text-3xl tracking-wider text-primary">
             Simple<p className="text-muted-foreground">Fleet</p>
           </span>
         </div>
@@ -23,8 +23,8 @@ export function AuthLayout() {
 
       <div className="flex flex-col items-center justify-center p-6 md:p-10">
         <div className="flex items-center gap-3 text-lg text-foreground md:hidden">
-          <Car className="h-6 w-6 text-muted-foreground" />
-          <span className="font-leckerli-one flex flex-row text-3xl tracking-wider text-primary">
+          <CarFront className="h-6 w-6 text-muted-foreground" />
+          <span className="flex flex-row font-leckerli-one text-3xl tracking-wider text-primary">
             Barb<p className="text-muted-foreground">agenda</p>
           </span>
         </div>
@@ -33,5 +33,5 @@ export function AuthLayout() {
         </div>
       </div>
     </div>
-  );
+  )
 }

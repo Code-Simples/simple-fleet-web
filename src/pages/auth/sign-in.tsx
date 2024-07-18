@@ -3,5 +3,5 @@ export function SignIn() {
     <div className="">
       <h1>Home</h1>
     </div>
-  );
+  )
 }

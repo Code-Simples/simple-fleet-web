@@ -1,6 +1,6 @@
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
 // import { PasswordInput } from '@/components/ui/password-input'
 import {
   SheetClose,
@@ -9,7 +9,7 @@ import {
   SheetFooter,
   SheetHeader,
   SheetTitle,
-} from "@/components/ui/sheet";
+} from '@/components/ui/sheet'
 
 export function UserProfileSheet() {
   return (
@@ -54,5 +54,5 @@ export function UserProfileSheet() {
         </SheetFooter>
       </form>
     </SheetContent>
-  );
+  )
 }

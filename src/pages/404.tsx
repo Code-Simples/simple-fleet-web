@@ -9,7 +9,7 @@ export function NotFound() {
         404
       </h1>
       <p className="mb-4 text-3xl font-bold md:text-4xl">Algo está errado...</p>
-      <p className=" mb-4 text-lg font-normal text-muted-foreground">
+      <p className="mb-4 text-lg font-normal text-muted-foreground">
         Desculpe, não conseguimos encontrar essa página.
       </p>
       <Button variant="secondary" asChild>

@@ -1,10 +1,10 @@
 // import { useMutation, useQuery } from '@tanstack/react-query'
-import { ChevronDown, LogOut, User } from "lucide-react";
+import { ChevronDown, LogOut, User } from 'lucide-react'
 
 // import { useNavigate } from 'react-router-dom'
 // import { getUser } from '@/api/get-user'
 // import { signOut } from '@/api/sign-out'
-import { Button } from "@/components/ui/button";
+import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -12,10 +12,10 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Sheet, SheetTrigger } from "@/components/ui/sheet";
+} from '@/components/ui/dropdown-menu'
+import { Sheet, SheetTrigger } from '@/components/ui/sheet'
 // import { Skeleton } from '@/components/ui/skeleton'
-import { UserProfileSheet } from "@/components/user-profile-sheet";
+import { UserProfileSheet } from '@/components/user-profile-sheet'
 
 export function AccountMenu() {
   // const navigate = useNavigate()
@@ -82,5 +82,5 @@ export function AccountMenu() {
 
       <UserProfileSheet />
     </Sheet>
-  );
+  )
 }
