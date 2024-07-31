@@ -13,28 +13,16 @@ import {
 import { format } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 import {
-  ArrowUpDown,
-  Ban,
   Calendar as CalendarIcon,
   CalendarDays,
   ChevronLeft,
   ChevronRight,
-  MessageCircleWarning,
-  MoreHorizontal,
-  Sunrise,
 } from 'lucide-react'
 import { useState } from 'react'
 
+import { MapView } from '@/components/map-view'
 import { Button } from '@/components/ui/button'
 import { Calendar } from '@/components/ui/calendar'
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import {
@@ -69,67 +57,41 @@ export type Historic = {
 
 export const columns: ColumnDef<Historic>[] = [
   {
-    accessorKey: 'license_plate',
-    header: 'Placa do Veículo',
+    accessorKey: 'user_name',
+    header: 'Motorista',
     cell: ({ row }) => (
-      <div className="w-80">
-        <Label>{row.getValue('license_plate')}</Label>
+      <div className="w-56">
+        <Label>{row.getValue('user_name')}</Label>
       </div>
     ),
   },
   {
     accessorKey: 'description',
-    header: 'Descrição',
+    header: 'Motivo',
     cell: ({ row }) => (
-      <div>
+      <div className="w-56">
         <Label>{row.getValue('description')}</Label>
       </div>
     ),
   },
   {
-    accessorKey: 'status',
-    header: 'Status',
+    accessorKey: 'license_plate',
+    header: 'Placa do veículo',
     cell: ({ row }) => (
-      <div>
-        <Label>
-          {row.getValue('status') === 'arrival' ? 'Chegada' : 'Saída'}
-        </Label>
-      </div>
-    ),
-  },
-  {
-    accessorKey: 'created_at',
-    header: ({ column }) => {
-      return (
-        <Button
-          className="-ml-4"
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-        >
-          Data de Criação
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      )
-    },
-    cell: ({ row }) => (
-      <div className="flex flex-row items-center gap-3">
-        <Label>
-          {format(new Date(row.getValue('created_at')), 'PPP', {
-            locale: ptBR,
-          })}
-        </Label>
+      <div className="w-20 text-right">
+        <Label>{row.getValue('license_plate')}</Label>
       </div>
     ),
   },
   {
     accessorKey: 'updated_at',
-    header: 'Última Atualização',
+    header: 'Última atualização',
     cell: ({ row }) => (
-      <div>
+      <div className="w-20 text-right">
         <Label>
-          {format(new Date(row.getValue('updated_at')), 'PPP', {
+          {`às ${format(new Date(row.getValue('updated_at')), 'HH:mm', {
             locale: ptBR,
-          })}
+          })}`}
         </Label>
       </div>
     ),
@@ -137,29 +99,12 @@ export const columns: ColumnDef<Historic>[] = [
   {
     id: 'actions',
     enableHiding: false,
-    cell: () => {
+    cell: ({ row }) => {
+      const coords = row.original.coords
+      console.log(coords)
       return (
-        <div className="w-0">
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="h-8 w-8 p-0">
-                <span className="sr-only">Abrir menu</span>
-                <MoreHorizontal className="h-4 w-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuLabel>Ações</DropdownMenuLabel>
-              <DropdownMenuItem className="gap-3" onClick={() => null}>
-                <Ban />
-                Cancelar agendamento
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem className="gap-3">
-                <MessageCircleWarning />
-                Enviar lembrete
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+        <div className="w-10 text-right">
+          <MapView coords={coords} />
         </div>
       )
     },
