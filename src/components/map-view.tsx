@@ -10,10 +10,12 @@ import { Button } from '@/components/ui/button'
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog'
+import { Label } from '@/components/ui/label'
 import { env } from '@/env'
 
 interface MapViewProps {
@@ -95,6 +97,24 @@ export function MapView({ coords }: MapViewProps) {
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Localização</DialogTitle>
+          <DialogDescription>
+            {coords[0].timestamp && (
+              <Label>
+                {`Saída em ${new Date(coords[0].timestamp).toLocaleString()}`}
+              </Label>
+            )}
+
+            {coords.length > 1 && (
+              <>
+                <br></br>
+                <Label>
+                  {`Chegada em ${new Date(
+                    coords[coords.length - 1].timestamp,
+                  ).toLocaleString()}`}
+                </Label>
+              </>
+            )}
+          </DialogDescription>
         </DialogHeader>
         <GoogleMap
           onLoad={onLoad}
