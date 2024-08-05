@@ -1,19 +1,15 @@
 import {
   DirectionsRenderer,
-  DirectionsService,
   GoogleMap,
-  LoadScript,
-  Marker,
-  StandaloneSearchBox,
+  useJsApiLoader,
 } from '@react-google-maps/api'
 import { MapIcon } from 'lucide-react'
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -22,105 +18,72 @@ import { env } from '@/env'
 
 interface MapViewProps {
   coords: {
-    latitude: google.maps.LatLngLiteral
-    longitude: google.maps.LatLngLiteral
+    latitude: number
+    longitude: number
     timestamp: number
   }[]
 }
 
 export function MapView({ coords }: MapViewProps) {
-  console.log(coords)
-  const [map, setMap] = useState<google.maps.Map>()
-  const [searchBoxA, setSearchBoxA] = useState<google.maps.places.SearchBox>()
-  const [searchBoxB, setSearchBoxB] = useState<google.maps.places.SearchBox>()
-  const [pointA, setPointA] = useState<google.maps.LatLngLiteral>()
-  const [pointB, setPointB] = useState<google.maps.LatLngLiteral>()
-
-  const [origin, setOrigin] = useState<google.maps.LatLngLiteral | null>(null)
-  const [destination, setDestination] =
-    useState<google.maps.LatLngLiteral | null>(null)
-
-  const [response, setResponse] =
-    useState<google.maps.DistanceMatrixResponse | null>(null)
+  const [map, setMap] = useState<google.maps.Map | null>(null)
+  const [directionsResponse, setDirectionsResponse] =
+    useState<google.maps.DirectionsResult | null>(null)
 
   const position = {
-    // lat: coords[0].latitude,
-    // lng: coords[0].longitude,
-    lat: -25.45143,
-    lng: -52.901748,
+    lat: coords[0].latitude,
+    lng: coords[0].longitude,
   }
 
-  const onMapLoad = (map: google.maps.Map) => {
+  const { isLoaded } = useJsApiLoader({
+    googleMapsApiKey: env.VITE_GOOGLE_MAPS_API_KEY,
+    libraries: ['places', 'directions' as 'geometry'],
+  })
+
+  const onLoad = useCallback(function callback(map: google.maps.Map) {
     setMap(map)
-  }
-
-  const onLoadA = (ref: google.maps.places.SearchBox) => {
-    setSearchBoxA(ref)
-  }
-
-  const onLoadB = (ref: google.maps.places.SearchBox) => {
-    setSearchBoxB(ref)
-  }
-
-  const onPlacesChangedA = () => {
-    const places = searchBoxA!.getPlaces()
-    const place = places![0]
-    const location = {
-      lat: place?.geometry?.location?.lat() || 0,
-      lng: place?.geometry?.location?.lng() || 0,
-    }
-    setPointA(location)
-    setOrigin(null)
-    setDestination(null)
-    setResponse(null)
-    map?.panTo(location)
-  }
-
-  const onPlacesChangedB = () => {
-    const places = searchBoxB!.getPlaces()
-
-    const place = places![0]
-    const location = {
-      lat: place?.geometry?.location?.lat() || 0,
-      lng: place?.geometry?.location?.lng() || 0,
-    }
-    setPointB(location)
-    setOrigin(null)
-    setDestination(null)
-    setResponse(null)
-    map?.panTo(location)
-  }
-
-  const traceRoute = () => {
-    if (pointA && pointB) {
-      setOrigin(pointA)
-      setDestination(pointB)
-    }
-  }
-
-  const directionsServiceOptions =
-    // @ts-ignore
-    useMemo<google.maps.DirectionsRequest>(() => {
-      return {
-        origin,
-        destination,
-        travelMode: 'DRIVING',
-      }
-    }, [origin, destination])
-
-  const directionsCallback = useCallback((res) => {
-    if (res !== null && res.status === 'OK') {
-      setResponse(res)
-    } else {
-      console.log(res)
-    }
   }, [])
 
-  const directionsRendererOptions = useMemo<any>(() => {
-    return {
-      directions: response,
+  const onUnmount = useCallback(function callback() {
+    setMap(null)
+  }, [])
+
+  useEffect(() => {
+    if (isLoaded && coords.length > 1) {
+      const directionsService = new google.maps.DirectionsService()
+      const origin = new google.maps.LatLng(
+        coords[0].latitude,
+        coords[0].longitude,
+      )
+      const destination = new google.maps.LatLng(
+        coords[coords.length - 1].latitude,
+        coords[coords.length - 1].longitude,
+      )
+      const waypoints = coords.slice(1, -1).map((coord) => ({
+        location: new google.maps.LatLng(coord.latitude, coord.longitude),
+        stopover: false,
+      }))
+
+      directionsService.route(
+        {
+          origin,
+          destination,
+          waypoints,
+          travelMode: google.maps.TravelMode.DRIVING,
+        },
+        (result, status) => {
+          if (status === google.maps.DirectionsStatus.OK && result) {
+            setDirectionsResponse(result)
+          } else {
+            console.error(`Error fetching directions: ${status}`, result)
+          }
+        },
+      )
     }
-  }, [response])
+  }, [isLoaded, coords])
+
+  if (!isLoaded) {
+    return <div>Carregando...</div>
+  }
 
   return (
     <Dialog>
@@ -133,57 +96,32 @@ export function MapView({ coords }: MapViewProps) {
         <DialogHeader>
           <DialogTitle>Localização</DialogTitle>
         </DialogHeader>
-        <LoadScript
-          googleMapsApiKey={env.GOOGLE_MAPS_API_KEY}
-          libraries={['places']}
+        <GoogleMap
+          onLoad={onLoad}
+          onUnmount={onUnmount}
+          mapContainerStyle={{
+            width: '100%',
+            height: '800px',
+            borderRadius: '8px',
+          }}
+          center={position}
+          zoom={15}
         >
-          <GoogleMap
-            onLoad={onMapLoad}
-            mapContainerStyle={{
-              width: '100%',
-              height: '800px',
-              borderRadius: '8px',
-            }}
-            center={position}
-            zoom={15}
-          >
-            <div className="address">
-              <StandaloneSearchBox
-                onLoad={onLoadA}
-                onPlacesChanged={onPlacesChangedA}
-              >
-                <input
-                  className="addressField"
-                  placeholder="Digite o endereço inicial"
-                />
-              </StandaloneSearchBox>
-              <StandaloneSearchBox
-                onLoad={onLoadB}
-                onPlacesChanged={onPlacesChangedB}
-              >
-                <input
-                  className="addressField"
-                  placeholder="Digite o endereço final"
-                />
-              </StandaloneSearchBox>
-              <button onClick={traceRoute}>Traçar rota</button>
-            </div>
-
-            {!response && pointA && <Marker position={pointA} />}
-            {!response && pointB && <Marker position={pointB} />}
-
-            {origin && destination && (
-              <DirectionsService
-                options={directionsServiceOptions}
-                callback={directionsCallback}
-              />
-            )}
-
-            {response && directionsRendererOptions && (
-              <DirectionsRenderer options={directionsRendererOptions} />
-            )}
-          </GoogleMap>
-        </LoadScript>
+          {directionsResponse && (
+            <DirectionsRenderer
+              options={{
+                directions: directionsResponse,
+                suppressMarkers: false,
+                polylineOptions: {
+                  strokeColor: '#D3500C',
+                  strokeOpacity: 0.7,
+                  strokeWeight: 7,
+                },
+              }}
+              directions={directionsResponse}
+            />
+          )}
+        </GoogleMap>
       </DialogContent>
     </Dialog>
   )

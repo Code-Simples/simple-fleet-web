@@ -101,7 +101,7 @@ export const columns: ColumnDef<Historic>[] = [
     enableHiding: false,
     cell: ({ row }) => {
       const coords = row.original.coords
-      console.log(coords)
+
       return (
         <div className="w-10 text-right">
           <MapView coords={coords} />
@@ -189,14 +189,10 @@ export function Historic({ data }: { data: Historic[] }) {
             <Input
               placeholder="Pesquise aqui..."
               value={
-                (table
-                  .getColumn('license_plate')
-                  ?.getFilterValue() as string) ?? ''
+                (table.getColumn('user_name')?.getFilterValue() as string) ?? ''
               }
               onChange={(event) =>
-                table
-                  .getColumn('license_plate')
-                  ?.setFilterValue(event.target.value)
+                table.getColumn('user_name')?.setFilterValue(event.target.value)
               }
               className="max-w-sm"
             />
