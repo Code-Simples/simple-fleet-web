@@ -1,27 +1,29 @@
-import { useQuery } from '@tanstack/react-query'
+import { LoaderIcon } from 'lucide-react'
 import { Helmet } from 'react-helmet-async'
 
-import { getHistoric } from '@/api/get-historic'
 import { Historic } from '@/components/historic'
+import { useWebSocket } from '@/hooks/useWebSocket'
 
 export function ListHistoric() {
-  const { data: historic, isLoading: isLoadingHistoric } = useQuery({
-    queryKey: ['historic'],
-    queryFn: getHistoric,
-    staleTime: Infinity,
-  })
+  const { messages, isConnected } = useWebSocket()
+  const flattenedMessages = messages.flatMap((message) => message.data)
 
   return (
-    <div>
+    <>
       <Helmet title="Painel" />
 
-      <div className="ml-8 flex flex-col p-6 md:p-10">
-        {!isLoadingHistoric && historic ? (
-          <Historic data={historic} />
+      <div className="px-8 xl:px-40">
+        {isConnected ? (
+          <Historic data={flattenedMessages} />
         ) : (
-          <p>Loading...</p>
+          <div className="absolute inset-0 flex items-center justify-center">
+            <LoaderIcon className="h-8 w-8 animate-spin text-muted-foreground" />
+            <span className="mt-4 text-muted-foreground">
+              Conectando ao servidor...
+            </span>
+          </div>
         )}
       </div>
-    </div>
+    </>
   )
 }

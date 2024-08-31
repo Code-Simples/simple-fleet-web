@@ -9,7 +9,7 @@ export function Header() {
       <div className="flex h-16 items-center gap-6 px-6">
         <div className="flex items-center gap-3 text-lg text-foreground">
           <CarFront className="h-8 w-8 text-muted-foreground" />
-          <span className="flex flex-row font-leckerli-one text-2xl tracking-wider text-primary">
+          <span className="flex flex-row font-leckerli-one text-xl tracking-wider text-primary">
             Simple<p className="text-muted-foreground">Fleet</p>
           </span>
         </div>

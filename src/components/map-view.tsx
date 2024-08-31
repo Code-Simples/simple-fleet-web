@@ -49,6 +49,25 @@ export function MapView({ coords }: MapViewProps) {
     setMap(null)
   }, [])
 
+  function formatDate(timestamp: number): string {
+    return new Date(timestamp).toLocaleString('pt-BR', {
+      timeZone: 'America/Sao_Paulo',
+      dateStyle: 'short',
+      timeStyle: 'short',
+    })
+  }
+
+  function formatDistance(distanceInMeters: number): string {
+    if (distanceInMeters < 1000) {
+      return `${distanceInMeters.toFixed(0)} m`
+    } else {
+      const distanceInKilometers = distanceInMeters / 1000
+      return `${distanceInKilometers.toFixed(2)} km`
+    }
+  }
+
+  const totalDistance = directionsResponse?.routes[0]?.legs[0]?.distance?.value
+
   useEffect(() => {
     if (isLoaded && coords.length > 1) {
       const directionsService = new google.maps.DirectionsService()
@@ -98,22 +117,36 @@ export function MapView({ coords }: MapViewProps) {
         <DialogHeader>
           <DialogTitle>Localização</DialogTitle>
           <DialogDescription>
-            {coords[0].timestamp && (
-              <Label>
-                {`Saída em ${new Date(coords[0].timestamp).toLocaleString()}`}
-              </Label>
-            )}
-
-            {coords.length > 1 && (
-              <>
-                <br></br>
+            <div className="mt-3 flex flex-col">
+              {coords.length > 0 && (
                 <Label>
-                  {`Chegada em ${new Date(
-                    coords[coords.length - 1].timestamp,
-                  ).toLocaleString()}`}
+                  {`Saída em: `}
+                  <span className="text-base text-white">
+                    {formatDate(coords[0].timestamp)}
+                  </span>
                 </Label>
-              </>
-            )}
+              )}
+
+              {coords.length > 1 && (
+                <div className="flex items-center justify-between">
+                  <Label>
+                    {`Chegada em: `}
+                    <span className="text-base text-white">
+                      {formatDate(coords[coords.length - 1].timestamp)}
+                    </span>
+                  </Label>
+
+                  {totalDistance && (
+                    <Label>
+                      {`Distância total: `}
+                      <span className="text-base text-white">
+                        {formatDistance(totalDistance)}
+                      </span>
+                    </Label>
+                  )}
+                </div>
+              )}
+            </div>
           </DialogDescription>
         </DialogHeader>
         <GoogleMap

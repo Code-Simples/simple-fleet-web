@@ -60,7 +60,7 @@ export const columns: ColumnDef<Historic>[] = [
     accessorKey: 'user_name',
     header: 'Motorista',
     cell: ({ row }) => (
-      <div className="w-56">
+      <div className="w-60">
         <Label>{row.getValue('user_name')}</Label>
       </div>
     ),
@@ -69,7 +69,7 @@ export const columns: ColumnDef<Historic>[] = [
     accessorKey: 'description',
     header: 'Motivo',
     cell: ({ row }) => (
-      <div className="w-56">
+      <div className="w-80">
         <Label>{row.getValue('description')}</Label>
       </div>
     ),
@@ -78,24 +78,33 @@ export const columns: ColumnDef<Historic>[] = [
     accessorKey: 'license_plate',
     header: 'Placa do veículo',
     cell: ({ row }) => (
-      <div className="w-20 text-right">
+      <>
         <Label>{row.getValue('license_plate')}</Label>
-      </div>
+      </>
     ),
   },
   {
     accessorKey: 'updated_at',
     header: 'Última atualização',
     cell: ({ row }) => (
-      <div className="w-20 text-right">
+      <>
         <Label>
           {`às ${format(new Date(row.getValue('updated_at')), 'HH:mm', {
             locale: ptBR,
           })}`}
         </Label>
-      </div>
+      </>
     ),
   },
+  // {
+  //   accessorKey: 'distance',
+  //   header: 'Distância',
+  //   cell: ({ row }) => (
+  //     <>
+
+  //     </>
+  //   ),
+  // },
   {
     id: 'actions',
     enableHiding: false,
@@ -103,9 +112,9 @@ export const columns: ColumnDef<Historic>[] = [
       const coords = row.original.coords
 
       return (
-        <div className="w-10 text-right">
+        <>
           <MapView coords={coords} />
-        </div>
+        </>
       )
     },
   },
@@ -137,7 +146,7 @@ export function Historic({ data }: { data: Historic[] }) {
     },
     initialState: {
       pagination: {
-        pageSize: 8,
+        pageSize: 7,
       },
     },
   })

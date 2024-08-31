@@ -1,6 +1,5 @@
 import './global.css'
 
-import { QueryClientProvider } from '@tanstack/react-query'
 import { Helmet, HelmetProvider } from 'react-helmet-async'
 import { RouterProvider } from 'react-router-dom'
 
@@ -14,11 +13,10 @@ export function App() {
     <HelmetProvider>
       <ThemeProvider defaultTheme="sistema" storageKey="simple-fleet-theme">
         <Helmet titleTemplate="%s | Simple Fleet" />
-        <QueryClientProvider client={queryClient}>
-          <RouterProvider router={router} />
 
-          <Toaster />
-        </QueryClientProvider>
+        <RouterProvider router={router} />
+
+        <Toaster />
       </ThemeProvider>
     </HelmetProvider>
   )
