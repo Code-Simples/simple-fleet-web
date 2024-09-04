@@ -60,7 +60,7 @@ export const columns: ColumnDef<Historic>[] = [
     accessorKey: 'user_name',
     header: 'Motorista',
     cell: ({ row }) => (
-      <div className="w-60">
+      <div>
         <Label>{row.getValue('user_name')}</Label>
       </div>
     ),
@@ -69,7 +69,7 @@ export const columns: ColumnDef<Historic>[] = [
     accessorKey: 'description',
     header: 'Motivo',
     cell: ({ row }) => (
-      <div className="w-80">
+      <div>
         <Label>{row.getValue('description')}</Label>
       </div>
     ),
@@ -78,33 +78,45 @@ export const columns: ColumnDef<Historic>[] = [
     accessorKey: 'license_plate',
     header: 'Placa do veículo',
     cell: ({ row }) => (
-      <>
+      <div>
         <Label>{row.getValue('license_plate')}</Label>
-      </>
+      </div>
+    ),
+  },
+  {
+    accessorKey: 'created_at',
+    header: 'Saída',
+    cell: ({ row }) => (
+      <div>
+        <Label>
+          {`${format(
+            new Date(row.getValue('created_at')),
+            'dd/MM/yyyy - HH:mm',
+            {
+              locale: ptBR,
+            },
+          )}`}
+        </Label>
+      </div>
     ),
   },
   {
     accessorKey: 'updated_at',
     header: 'Última atualização',
     cell: ({ row }) => (
-      <>
+      <div>
         <Label>
-          {`às ${format(new Date(row.getValue('updated_at')), 'HH:mm', {
-            locale: ptBR,
-          })}`}
+          {`${format(
+            new Date(row.getValue('updated_at')),
+            'dd/MM/yyyy - HH:mm',
+            {
+              locale: ptBR,
+            },
+          )}`}
         </Label>
-      </>
+      </div>
     ),
   },
-  // {
-  //   accessorKey: 'distance',
-  //   header: 'Distância',
-  //   cell: ({ row }) => (
-  //     <>
-
-  //     </>
-  //   ),
-  // },
   {
     id: 'actions',
     enableHiding: false,
@@ -112,9 +124,9 @@ export const columns: ColumnDef<Historic>[] = [
       const coords = row.original.coords
 
       return (
-        <>
+        <div className="w-10 text-right">
           <MapView coords={coords} />
-        </>
+        </div>
       )
     },
   },
@@ -146,10 +158,21 @@ export function Historic({ data }: { data: Historic[] }) {
     },
     initialState: {
       pagination: {
-        pageSize: 7,
+        pageSize: 8,
       },
     },
   })
+
+  const handleDateSelect = (selectedDate: Date | undefined) => {
+    setDate(selectedDate)
+
+    if (selectedDate) {
+      const formattedDate = format(selectedDate, 'yyyy-MM-dd')
+      table.getColumn('created_at')?.setFilterValue(formattedDate)
+    } else {
+      table.getColumn('created_at')?.setFilterValue(undefined)
+    }
+  }
 
   return (
     <div className="space-y-4">
@@ -182,7 +205,7 @@ export function Historic({ data }: { data: Historic[] }) {
             <Calendar
               mode="single"
               selected={date}
-              onSelect={setDate}
+              onSelect={handleDateSelect}
               initialFocus
             />
           </PopoverContent>
