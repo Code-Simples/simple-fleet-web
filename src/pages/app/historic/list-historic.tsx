@@ -18,9 +18,6 @@ export function ListHistoric() {
         ) : (
           <div className="absolute inset-0 flex items-center justify-center">
             <LoaderIcon className="h-8 w-8 animate-spin text-muted-foreground" />
-            <span className="mt-4 text-muted-foreground">
-              Conectando ao servidor...
-            </span>
           </div>
         )}
       </div>

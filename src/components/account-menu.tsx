@@ -1,9 +1,9 @@
-// import { useMutation, useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import { ChevronDown, LogOut, User } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
 
-// import { useNavigate } from 'react-router-dom'
-// import { getUser } from '@/api/get-user'
-// import { signOut } from '@/api/sign-out'
+import { getUser } from '@/api/get-user'
+import { signOut } from '@/api/sign-out'
 import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
@@ -14,22 +14,22 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { Sheet, SheetTrigger } from '@/components/ui/sheet'
-// import { Skeleton } from '@/components/ui/skeleton'
+import { Skeleton } from '@/components/ui/skeleton'
 import { UserProfileSheet } from '@/components/user-profile-sheet'
 
 export function AccountMenu() {
-  // const navigate = useNavigate()
+  const navigate = useNavigate()
 
-  // const { data: user, isLoading: isLoadingUser } = useQuery({
-  //   queryKey: ['user'],
-  //   queryFn: getUser,
-  //   staleTime: Infinity,
-  // })
+  const { data: user, isLoading: isLoadingUser } = useQuery({
+    queryKey: ['user'],
+    queryFn: getUser,
+    staleTime: Infinity,
+  })
 
-  // const { mutateAsync: signOutFn, isPending: isSigningOut } = useMutation({
-  //   mutationFn: signOut,
-  //   onSuccess: () => navigate('/sign-in', { replace: true }),
-  // })
+  const { mutateAsync: signOutFn, isPending: isSigningOut } = useMutation({
+    mutationFn: signOut,
+    onSuccess: () => navigate('/sign-in', { replace: true }),
+  })
 
   return (
     <Sheet>
@@ -46,19 +46,19 @@ export function AccountMenu() {
 
         <DropdownMenuContent align="end" className="w-56">
           <DropdownMenuLabel className="flex flex-col">
-            {/* {isLoadingUser ? (
+            {isLoadingUser ? (
               <div className="space-y-1.5">
                 <Skeleton className="h-4 w-32" />
                 <Skeleton className="h-3 w-24" />
               </div>
-            ) : ( */}
-            <>
-              <span>Pedro</span>
-              <span className="font-normal text-muted-foreground">
-                pedrokarnoski
-              </span>
-            </>
-            {/* )} */}
+            ) : (
+              <>
+                <span>{user?.name}</span>
+                <span className="font-normal text-muted-foreground">
+                  {user?.username}
+                </span>
+              </>
+            )}
           </DropdownMenuLabel>
           <DropdownMenuSeparator />
           <SheetTrigger asChild>
@@ -69,10 +69,10 @@ export function AccountMenu() {
           </SheetTrigger>
           <DropdownMenuItem
             asChild
-            // disabled={isSigningOut}
+            disabled={isSigningOut}
             className="text-rose-500 dark:text-rose-400"
           >
-            <button className="w-full" onClick={() => null}>
+            <button className="w-full" onClick={() => signOutFn()}>
               <LogOut className="mr-2 h-4 w-4" />
               <span>Sair</span>
             </button>

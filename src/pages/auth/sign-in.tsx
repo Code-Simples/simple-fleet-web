@@ -74,6 +74,9 @@ export function SignIn() {
         <div className="flex w-[350px] flex-col justify-center gap-10">
           <div className="flex flex-col gap-2 text-center">
             <h1 className="text-2xl font-semibold tracking-tight">Acessar</h1>
+            <p className="text-sm text-muted-foreground">
+              Acessar painel administrativo
+            </p>
           </div>
 
           <form onSubmit={handleSubmit(handleSignIn)} className="space-y-4">

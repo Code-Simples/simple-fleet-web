@@ -49,7 +49,7 @@ export function useWebSocket() {
   }, [])
 
   useEffect(() => {
-    const socket = new WebSocket(env.VITE_API_URL)
+    const socket = new WebSocket('ws://' + env.VITE_API_URL)
     socketRef.current = socket
 
     socket.addEventListener('open', handleOpen)

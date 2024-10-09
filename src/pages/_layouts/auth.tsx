@@ -13,8 +13,8 @@ export function AuthLayout() {
         </div>
 
         <div className="flex flex-col pr-8 text-white">
-          <div className="flex items-center gap-4 text-lg font-bold">
-            <CheckCircle2 className="text-primary" />
+          <div className="flex items-center gap-4 font-medium">
+            <CheckCircle2 size={18} className="text-primary" />
             <p>Gerencie sua frota de veículos</p>
           </div>
           <p className="pl-10 text-sm text-muted-foreground">
@@ -22,8 +22,8 @@ export function AuthLayout() {
             rápidas e assertivas.
           </p>
 
-          <div className="mt-12 flex items-center gap-4 text-lg font-bold">
-            <CheckCircle2 className="text-primary" />
+          <div className="mt-12 flex items-center gap-4 font-medium">
+            <CheckCircle2 size={18} className="text-primary" />
             <p>Reduza custos operacionais</p>
           </div>
           <p className="pl-10 text-sm text-muted-foreground">
@@ -31,8 +31,8 @@ export function AuthLayout() {
             combustível e manutenção.
           </p>
 
-          <div className="mt-12 flex items-center gap-4 text-lg font-bold">
-            <CheckCircle2 className="text-primary" />
+          <div className="mt-12 flex items-center gap-4 font-medium">
+            <CheckCircle2 size={18} className="text-primary" />
             <p>Aumente a produtividade</p>
           </div>
           <p className="pl-10 text-sm text-muted-foreground">
